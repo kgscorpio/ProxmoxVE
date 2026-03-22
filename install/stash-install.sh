@@ -35,7 +35,7 @@ echo -e "${INFO}${YW} Download URL: ${STASH_URL}${CL}"
 
 msg_info "Downloading Stash binary..."
 # Removed -q from wget so you can see the download progress/errors
-wget -Oq /opt/stash/stash "$STASH_URL"
+wget -qLO /opt/stash/stash "$STASH_URL"
 chmod +x /opt/stash/stash
 msg_ok "Stash Binary Downloaded"
 
