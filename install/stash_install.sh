@@ -8,8 +8,19 @@ msg_ok "Dependencies Installed"
 
 msg_info "Setting up Stash"
 mkdir -p /opt/stash /var/lib/stash
-# Fetch latest release binary URL
-STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest | grep "browser_download_url.*linux_amd64" | cut -d : -f 2,3 | tr -d \" | xargs)
+
+# Robust URL extraction: Grabs the 4th field between double quotes
+STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest \
+  | grep "browser_download_url" \
+  | grep "linux_amd64" \
+  | cut -d '"' -f 4 \
+  | head -n 1)
+
+if [[ -z "$STASH_URL" ]]; then
+  msg_error "Failed to find download URL. GitHub API might be rate-limiting."
+  exit 1
+fi
+
 wget -qO /opt/stash/stash "$STASH_URL"
 chmod +x /opt/stash/stash
 msg_ok "Stash Binary Downloaded"
