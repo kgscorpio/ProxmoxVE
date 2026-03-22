@@ -24,7 +24,7 @@ fi
 msg_info "Using Download url $STASH_URL"
 
 
-header_info "$APP"
+header_info "$STASH_URL $APP"
 variables
 color
 catch_errors
