@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x  # Uncomment this line to see EVERY command executed for deep debugging
+#set -x  # Uncomment this line to see EVERY command executed for deep debugging
 
 # 1. Check if the source file is actually reachable
 INSTALL_FUNC_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func"
