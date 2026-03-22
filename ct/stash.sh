@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/kgscorpio/ProxmoxVE/main/misc/build.func)
-# --- Pre-flight Check ---
-INSTALL_URL="https://raw.githubusercontent.com/kgscorpio/ProxmoxVE/main/install/stash_install.sh"
-
-if ! curl -sSfI "$INSTALL_URL" > /dev/null; then
-  echo -e "\e[31m[ERROR]\e[0m Cannot find install script at: $INSTALL_URL"
-  echo -e "Please check your GitHub username and file path."
-  exit 1
-fi
-
-# Set the variable for the build function
-export install_script="$INSTALL_URL"
 # --- Metadata ---
 APP="Stash"
 var_tags="${var_tags:-stash}"
