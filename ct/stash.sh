@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/kgscorpio/ProxmoxVE/main/m
 
 # --- Metadata ---
 APP="Stash"
-var_tags="${var_tags:-media;video;stash}"
+var_tags="${var_tags:-stash}"
 var_cpu="${var_cpu:-2}"           # Stash uses CPU for generating "scrub" previews
 var_ram="${var_ram:-2048}"        # 2GB is the sweet spot for scanning large libraries
 var_disk="${var_disk:-4}"
