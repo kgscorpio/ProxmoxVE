@@ -20,13 +20,42 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/stash ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-  msg_info "Updating ${APP} Binary"
+  
+  if [[ ! -f /opt/stash/stash ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  # 1. Version Check
+  local_version=$(/opt/stash/stash -v | awk '{print $1}')
+  latest_version=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+
+  if [ "$local_version" == "$latest_version" ]; then
+    msg_ok "Stash is already up to date (${local_version})."
+    exit
+  fi
+
+  # 2. Pre-Update Backup
+  msg_info "Backing up Stash Data (Database & Config)"
+  BACKUP_DIR="/var/lib/stash_backups"
+  TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+  mkdir -p "$BACKUP_DIR"
+  # We use 'cp -r' to copy the current database and config
+  cp -r /var/lib/stash "$BACKUP_DIR/stash_backup_$TIMESTAMP"
+  # Keep only the last 5 backups to save disk space
+  (cd "$BACKUP_DIR" && ls -t | tail -n +6 | xargs rm -rf)
+  msg_ok "Backup created: $BACKUP_DIR/stash_backup_$TIMESTAMP"
+
+  # 3. Perform Update
+  msg_info "Updating Stash from ${local_version} to ${latest_version}"
   systemctl stop stash
-  wget -qO /opt/stash/stash https://github.com/stashapp/stash/releases/latest/download/stash-linux-amd64
+  
+  STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest | grep "browser_download_url.*linux_amd64" | cut -d : -f 2,3 | tr -d \" | xargs)
+  wget -qO /opt/stash/stash "$STASH_URL"
   chmod +x /opt/stash/stash
+  
   systemctl start stash
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated ${APP} to ${latest_version}"
   exit
 }
 
