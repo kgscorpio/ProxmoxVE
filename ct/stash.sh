@@ -11,6 +11,18 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
+# Robust URL extraction: Grabs the 4th field between double quotes
+STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest \
+  | grep "browser_download_url" \
+  | grep "/stash-linux\"" \
+  | cut -d '"' -f 4)
+
+if [[ -z "$STASH_URL" ]]; then
+  msg_error "Failed to find download URL. GitHub API might be rate-limiting."
+  exit 1
+fi
+msg_info "Using Download url $STASH_URL"
+
 
 header_info "$APP"
 variables
