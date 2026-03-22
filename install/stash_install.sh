@@ -19,6 +19,7 @@ if [[ -z "$STASH_URL" ]]; then
   msg_error "Failed to find download URL. GitHub API might be rate-limiting."
   exit 1
 fi
+msg_info "Using Download url $STASH_URL"
 
 wget -qO /opt/stash/stash "$STASH_URL"
 chmod +x /opt/stash/stash
