@@ -12,9 +12,8 @@ mkdir -p /opt/stash /var/lib/stash
 # Robust URL extraction: Grabs the 4th field between double quotes
 STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest \
   | grep "browser_download_url" \
-  | grep "linux_amd64" \
-  | cut -d '"' -f 4 \
-  | head -n 1)
+  | grep "/stash-linux\"" \
+  | cut -d '"' -f 4)
 
 if [[ -z "$STASH_URL" ]]; then
   msg_error "Failed to find download URL. GitHub API might be rate-limiting."
