@@ -92,14 +92,15 @@ lxc.idmap: u 1 100001 65534
 lxc.idmap: g 1 100001 65534
 EOF
 
-# 5. Surgical Permission Fix (The Corrected Version)
+# --- Corrected Surgical Permission Fix ---
 msg_info "Surgically re-mapping file ownership..."
 MOUNT_OUTPUT=$(pct mount $CTID)
 MOUNT_PATH=$(echo "$MOUNT_OUTPUT" | cut -d"'" -f2)
 
 if [[ -d "$MOUNT_PATH" ]]; then
-  find "$MOUNT_PATH" -uid 100000 -exec chown $MAP_UID {} +
-  find "$MOUNT_PATH" -gid 100000 -exec chgrp $MAP_GID {} +
+  # Use -h to handle broken symlinks without crashing
+  find "$MOUNT_PATH" -uid 100000 -exec chown -h $MAP_UID {} +
+  find "$MOUNT_PATH" -gid 100000 -exec chgrp -h $MAP_GID {} +
   pct unmount $CTID &>/dev/null
 fi
 
