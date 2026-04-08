@@ -62,7 +62,6 @@ function update_script() {
   msg_info "Updating Stash from ${local_version} to ${latest_version}"
   systemctl stop stash
   
-  STASH_URL=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest | grep "browser_download_url.*linux_amd64" | cut -d : -f 2,3 | tr -d \" | xargs)
   wget -qO /opt/stash/stash "$STASH_URL"
   chmod +x /opt/stash/stash
   
