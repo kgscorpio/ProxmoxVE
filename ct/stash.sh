@@ -38,6 +38,9 @@ function update_script() {
     exit
   fi
 
+  $STD apt update
+  $STD apt upgrade -y
+
   # 1. Version Check
   local_version=$(/opt/stash/stash -v | awk '{print $1}')
   latest_version=$(curl -s https://api.github.com/repos/stashapp/stash/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
