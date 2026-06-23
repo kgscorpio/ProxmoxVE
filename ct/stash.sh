@@ -40,6 +40,7 @@ function update_script() {
 
   $STD apt update
   $STD apt upgrade -y
+  msg_ok "LXC packages update"
 
   # 1. Version Check
   local_version=$(/opt/stash/stash -v | awk '{print $1}')
